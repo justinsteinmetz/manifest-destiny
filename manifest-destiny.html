@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two Documents — God and Mammon · Instrument II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --parchment: #F3ECD8;
+  --parchment-deep: #EAE0C3;
+  --ink: #261D14;
+  --ink-soft: #5B4C3A;
+  --rubric: #8C3526;
+  --ledger: #3F5536;
+  --gold: #9C7A3C;
+  --edge: #C9BB95;
+  --cold: #2E3F5C;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(255,253,244,0.55), transparent 55%),
+    radial-gradient(ellipse at 100% 110%, rgba(0,0,0,0.05), transparent 60%),
+    var(--parchment);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 5vw, 1.5rem) 8rem;
+}
+
+.eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.6rem;
+}
+
+h1.title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  line-height: 1.0;
+  margin: 0.2rem 0 0.2rem;
+}
+
+.dateline {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+}
+
+hr.rule {
+  border: none;
+  border-top: 1px solid var(--edge);
+  margin: 2rem 0;
+}
+
+/* SCREENS */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* BRIEF */
+.brief p {
+  font-size: 1rem;
+  color: var(--ink-soft);
+  margin: 0 0 1rem;
+}
+.brief p strong { color: var(--ink); font-weight: 500; }
+
+/* DOCUMENT BLOCK */
+.doc-block {
+  background: var(--parchment-deep);
+  border: 1px solid var(--edge);
+  border-radius: 2px;
+  padding: 1.6rem 1.8rem;
+  margin: 1.5rem 0;
+  position: relative;
+}
+
+.doc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.doc-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1rem, 2.2vw, 1.15rem);
+  line-height: 1.65;
+  color: var(--ink);
+  font-style: italic;
+  margin-bottom: 0;
+}
+
+.doc-text p { margin: 0 0 0.9rem; }
+.doc-text p:last-child { margin-bottom: 0; }
+
+/* TASK */
+.task {
+  margin: 1.75rem 0 0.5rem;
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+/* RESPONSE AREA */
+.response-area {
+  width: 100%;
+  min-height: 100px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--edge);
+  font-family: 'DM Sans', sans-serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 0.95rem;
+  color: var(--ink);
+  line-height: 1.6;
+  padding: 8px 0;
+  resize: none;
+  outline: none;
+  transition: border-color 0.15s;
+  display: block;
+}
+.response-area:focus { border-bottom-color: var(--gold); }
+.response-area::placeholder { color: var(--edge); }
+
+/* ADVANCE BUTTON */
+.advance-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.75rem;
+}
+
+.btn-advance {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.75rem 2rem;
+  border-radius: 2px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--parchment);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-advance:hover { opacity: 0.82; }
+
+/* STAGE 3 — THE REVEAL */
+.reveal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--edge);
+  border: 1px solid var(--edge);
+  margin: 1.5rem 0;
+}
+
+.reveal-col {
+  background: var(--parchment-deep);
+  padding: 1.3rem 1.4rem;
+}
+
+.reveal-col-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.reveal-col-label.doc-a { color: var(--rubric); }
+.reveal-col-label.doc-b { color: var(--cold); }
+
+.reveal-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+}
+
+.reveal-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+/* THE SENTENCE */
+.sentence-block {
+  background: var(--parchment-deep);
+  border-left: 3px solid var(--rubric);
+  padding: 1.2rem 1.5rem;
+  margin: 1.75rem 0;
+}
+
+.sentence-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--rubric);
+  margin-bottom: 0.6rem;
+}
+
+.sentence-text {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: var(--ink);
+  line-height: 1.55;
+  margin-bottom: 0.5rem;
+}
+
+.sentence-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+/* TRAIL */
+.trail-block {
+  margin: 1.75rem 0;
+  padding: 1.2rem 1.5rem;
+  border: 1px solid var(--edge);
+  background: var(--parchment-deep);
+}
+
+
+
+.trail-row {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--edge);
+  font-size: 0.9rem;
+}
+.trail-row:last-child { border-bottom: none; }
+
+.trail-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  min-width: 60px;
+}
+
+.trail-event { color: var(--ink); line-height: 1.45; }
+.trail-event.weight { font-weight: 500; }
+
+/* FINAL */
+.final-block {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--edge);
+}
+
+.final-block p {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+.final-question {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  color: var(--ink);
+  line-height: 1.3;
+  margin-top: 1.5rem;
+  font-style: italic;
+}
+
+.final-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  margin-top: 0.75rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 520px) {
+  .reveal-grid { grid-template-columns: 1fr; }
+}
+
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="eyebrow">God and Mammon &nbsp;·&nbsp; Instrument II</div>
+    <h1 class="title">Two Documents</h1>
+    <div class="dateline">United States, 19th century</div>
+  </header>
+
+  <hr class="rule">
+
+  <!-- STAGE 1 -->
+  <section class="screen active" id="s1">
+    <div class="brief">
+      <p>Two documents have been placed in front of you. Both are from the same country, written within a decade of each other. Both invoke God. <strong>Read the first.</strong></p>
+    </div>
+
+    <div class="doc-block">
+      <div class="doc-label">Document A</div>
+      <div class="doc-text">
+        <p>The American people having derived their origin from many other nations, and the Declaration of National Independence being entirely based on the great principle of human equality, these facts demonstrate at once our disconnected position as regards any other nation.</p>
+        <p>Our national birth was the beginning of a new history — the formation and progress of an untried political system, which separates us from the past and connects us with the future only.</p>
+        <p>We have no reminiscences of battle fields, but in defence of humanity, of the oppressed of all nations. Our annals describe no scenes of horrid carnage, where men were led on by hundreds of thousands to slay one another.</p>
+        <p>We are the nation of human progress, and who will, what can, set limits to our onward march? Providence is with us, and no force can check our onward march.</p>
+      </div>
+    </div>
+
+    <p class="task">What kind of nation is being described?</p>
+    <textarea class="response-area" id="r1" placeholder="Write anything. A word, a sentence, a question." rows="4"></textarea>
+
+    <div class="advance-wrap">
+      <button class="btn-advance" onclick="goTo('s2')">Read the second document →</button>
+    </div>
+  </section>
+
+  <!-- STAGE 2 -->
+  <section class="screen" id="s2">
+    <div class="brief">
+      <p>The second document.</p>
+    </div>
+
+    <div class="doc-block">
+      <div class="doc-label">Document B</div>
+      <div class="doc-text">
+        <p>By the will of our Father in heaven, the governor of the whole world, the red man of America has become small, and the white man great and renowned.</p>
+        <p>We are told, if we do not leave the country which we dearly love, and betake ourselves to the western wilds, the laws of the state will be extended over us.</p>
+        <p>We love, we dearly love our country, and it is due to your honourable bodies to make known why we think the country is ours, and why we wish to remain in peace where we are.</p>
+        <p>We are not willing to remove; and if we could be brought to this extremity, it would be not by argument, not because our judgment was satisfied, not because our condition will be improved; but only because we cannot endure to be deprived of our national and individual rights.</p>
+        <p>We wish to remain on the land of our fathers.</p>
+      </div>
+    </div>
+
+    <p class="task">Can both documents be true?</p>
+    <textarea class="response-area" id="r2" placeholder="Write anything." rows="4"></textarea>
+
+    <div class="advance-wrap">
+      <button class="btn-advance" onclick="goTo('s3')">See the record →</button>
+    </div>
+  </section>
+
+  <!-- STAGE 3 — THE REVEAL -->
+  <section class="screen" id="s3">
+
+    <div class="reveal-grid">
+      <div class="reveal-col">
+        <div class="reveal-col-label doc-a">Document A</div>
+        <div class="reveal-name">John L. O'Sullivan</div>
+        <div class="reveal-meta">
+          "The Great Nation of Futurity"<br>
+          <em>The United States Democratic Review</em><br>
+          1839
+        </div>
+      </div>
+      <div class="reveal-col">
+        <div class="reveal-col-label doc-b">Document B</div>
+        <div class="reveal-name">Memorial of the Cherokee Nation</div>
+        <div class="reveal-meta">
+          Addressed to the United States Congress<br>
+          December 1829 · Published January 1830<br>
+          <em>Cherokee Phoenix</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="sentence-block">
+      <div class="sentence-label">From Document A — O'Sullivan, 1839</div>
+      <div class="sentence-text">"Our annals describe no scenes of horrid carnage, where men were led on by hundreds of thousands to slay one another."</div>
+      <div class="sentence-date">Written 1839.</div>
+    </div>
+
+    <div class="trail-block">
+      <div class="trail-row">
+        <div class="trail-date">1838–39</div>
+        <div class="trail-event weight">Trail of Tears. Approximately 4,000 die.</div>
+      </div>
+      <div class="trail-row">
+        <div class="trail-date">1839</div>
+        <div class="trail-event">"Our annals describe no scenes of horrid carnage." — O'Sullivan</div>
+      </div>
+    </div>
+
+    <div class="final-block">
+      <p class="final-question">Both sides appealed to God.<br>They reached opposite conclusions.<br><br>Why?</p>
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
